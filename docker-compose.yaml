@@ -1,0 +1,56 @@
+version: "3.1"
+
+services:
+  workspace:
+    container_name: base_workspace
+    restart: always
+    image: framgia/laravel-workspace
+    volumes:
+      - ./laravel:/var/www/laravel
+    tty: true
+  php-fpm:
+    container_name: base_php-fpm
+    restart: always
+    image: framgia/laravel-php-fpm
+    volumes:
+      - ./laravel:/var/www/laravel
+    expose:
+      - "9000"
+    depends_on:
+      - workspace
+  nginx:
+    container_name: base_nginx
+    restart: always
+    image: framgia/laravel-nginx
+    volumes:
+      - ./laravel:/var/www/laravel
+    ports:
+      - "8002:80"
+      - "8003:443"
+    depends_on:
+      - php-fpm
+  mysql:
+    container_name: base_mysql
+    restart: always
+    image: mysql:5.7
+    expose:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: homestead
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+  adminer:
+    container_name: base_adminer
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8082:8080"
+  vue-client-app:
+    container_name: vue-client
+    image: vuejs/ci
+    volumes_from:
+      - data
+    restart: always
+    ports:
+      - "3030:3000"
