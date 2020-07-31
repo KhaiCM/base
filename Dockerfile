@@ -1,18 +1,12 @@
-FROM node:10.16.0
-
-# WORKDIR /var/www/
-
-# set working directory
-WORKDIR /opt/app/
-
+# build stage
+FROM node:13-alpine as build-stage
+WORKDIR client/app
 COPY . .
+RUN npm install
+RUN npm run build
 
-# install and cache app dependencies
-# COPY package.json /app/package.json
-# RUN npm install
-# RUN npm install @vue/cli@3.7.0 -g
-
-# start app
-# CMD ["npm", "run", "serve"]
-
-ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
+# production stage
+FROM nginx:1.17-alpine as production-stage
+COPY --from=build-stage client/app/dist /usr/share/nginx/html
+# EXPOSE 5000
+CMD ["nginx", "-g", "daemon off;"]
