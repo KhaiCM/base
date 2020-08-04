@@ -18,17 +18,17 @@ services:
       - "9000"
     depends_on:
       - workspace
-  # nginx:
-  #   container_name: base_nginx
-  #   restart: always
-  #   image: framgia/laravel-nginx
-  #   volumes:
-  #     - ./laravel:/var/www/laravel
-  #   ports:
-  #     - "8002:80"
-  #     # - "8003:443"
-  #   depends_on:
-  #     - php-fpm
+  nginx:
+    container_name: base_nginx
+    restart: always
+    image: framgia/laravel-nginx
+    volumes:
+      - ./laravel:/var/www/laravel
+    ports:
+      - "8002:80"
+      # - "8003:443"
+    depends_on:
+      - php-fpm
   mysql:
     container_name: base_mysql
     restart: always
@@ -46,13 +46,15 @@ services:
     restart: always
     ports:
       - "8082:8080"
-  vue-client-app:
-    container_name: vue-client
+  vue:
+    container_name: vue_client
     build:
       context: ./client
       dockerfile: ./Dockerfile
-    # volumes:
-    #   - data
-    restart: always
+    volumes:
+      - .:/app
+      # - ./src:app/src
+    # restart: always
+    restart: unless-stopped
     ports:
-      - "5000:80"
+      - "3000:3000"
