@@ -1,7 +1,13 @@
-# build stage
-FROM node:12.3.1 as build-stage
+FROM node:12.3.1
+
 WORKDIR /app
-# RUN cd /client
+
+RUN npm install -g vue-cli
+
+COPY package.json .
+
 COPY . .
+
 RUN npm install
-CMD ["npm", "run", "dev"]
+
+CMD ["npm", "start"]
