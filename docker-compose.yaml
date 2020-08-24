@@ -58,4 +58,4 @@ services:
       # - ./src:app/src
     restart: on-failure
     ports:
-      - "8080:8080"
+      - "8008:8080"
