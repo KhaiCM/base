@@ -5,123 +5,28 @@
  */
 
 require('./bootstrap');
-require('./frontend/js/clean-blog.js');
-require('./frontend/js/clean-blog.min.js');
-require('./frontend/js/contact_me.js');
-require('./frontend/js/jqBootstrapValidation.js');
 
 window.Vue = require('vue');
-import VueRouter from 'vue-router';
-import App from './components/App';
-import fromNow from './filters/timeFilter';
-import largeNumber from './filters/largeNumber'
 
-window.Vue.use(VueRouter);
-window.Vue.filter('fromNow', fromNow);
-window.Vue.filter('largeNumber', largeNumber);
+/**
+ * The following block of code may be used to automatically register your
+ * Vue components. It will recursively scan this directory for the Vue
+ * components and automatically register them with their "basename".
+ *
+ * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
+ */
 
-// Views
-import CompaniesIndex from './components/companies/CompaniesIndex.vue';
-import CompaniesCreate from './components/companies/CompaniesCreate.vue';
-import CompaniesEdit from './components/companies/CompaniesEdit.vue';
+// const files = require.context('./', true, /\.vue$/i);
+// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-import BLogIndex from './components/home/HomeIndex.vue';
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-import HomeView from './components/home/HomeView.vue'
-import CategoryView from './components/home/CategoryView.vue'
-import TopicView from './components/home/TopicView.vue'
-import NotFound from './components/NotFound.vue'
-//blog
-import BlogHome from './components/blogs/HomeIndex.vue'
+/**
+ * Next, we will create a fresh Vue application instance and attach it to
+ * the page. Then, you may begin adding components to this application
+ * or customize the JavaScript scaffolding to fit your unique needs.
+ */
 
-import VatoHome from './components/blogs/HomeView.vue';
-import VatoBlogDetail from './components/blogs/BlogDetail.vue';
-import VatoBlogCreate from './components/blogs/CRUD/create.vue';
-import VatoBlogEdit from './components/blogs/CRUD/edit.vue';
-import VatoBlogCreateCategory from './components/blogs/category/create.vue';
-import VatoBlogEditCategory from './components/blogs/category/edit.vue';
-import VatoBlogIndexCategory from './components/blogs/category/index.vue';
-
-
-const router = new VueRouter({
-    mode: 'history',
-    routes: [{
-            path: '/companies',
-            components: {
-                companiesIndex: CompaniesIndex
-            }
-        },
-        {
-            path: '/admin/companies/create',
-            component: CompaniesCreate,
-            name: 'createCompany'
-        },
-        {
-            path: '/admin/companies/edit/:id',
-            component: CompaniesEdit,
-            name: 'editCompany'
-        },
-        {
-            path: '/admin/blog/index',
-            components: {
-                blogIndex: BLogIndex
-            },
-        },
-        {
-            path: '/homeview',
-            name: 'Home',
-            component: HomeView
-        },
-        {
-            path: '/category/:categoryId',
-            name: 'Category',
-            component: CategoryView
-        },
-        {
-            path: '/topic',
-            name: 'Topic',
-            component: TopicView
-        },
-        {
-            path: '/vatohome',
-            name: 'Vato',
-            component: VatoHome
-        },
-        {
-            path: '/vatoblogdetail',
-            name: 'BlogDeatil',
-            component: VatoBlogDetail
-        },
-        {
-            path: '/vatoblog/create',
-            name: 'BlogCreate',
-            component: VatoBlogCreate
-        },
-        {
-            path: '/vatoblog/edit',
-            name: 'BlogEdit',
-            component: VatoBlogEdit
-        },
-        {
-            path: '/vatoblog/indexcategory',
-            name: 'BlogIndexCategory',
-            component: VatoBlogIndexCategory
-        },
-        {
-            path: '/vatoblog/createcategory',
-            name: 'BlogCreateCategory',
-            component: VatoBlogCreateCategory
-        },
-        {
-            path: '/vatoblog/editcategory',
-            name: 'BlogEditCategory',
-            component: VatoBlogEditCategory
-        },
-        {
-            path: '/test',
-            component: NotFound
-        }
-    ]
-})
-
-const app = new Vue({ router }).$mount('#app')
+const app = new Vue({
+    el: '#app',
+});

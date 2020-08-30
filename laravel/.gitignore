@@ -1,7 +1,14 @@
 /node_modules
 /public/hot
 /public/storage
+/public/css
+/public/js
+/public/images
+/public/assets
+/public/fonts
 /storage/*.key
+/public/*.js
+/public/*.js.map
 /vendor
 .env
 .env.backup
@@ -10,7 +17,3 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/public/js
-/public/frontend
-/public/css
-/public/fonts/

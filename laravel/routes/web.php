@@ -14,10 +14,3 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-Auth::routes();
-
-Route::any('{all}', function () {
-    return view('welcome');
-})
-->where(['all' => '.*']);
