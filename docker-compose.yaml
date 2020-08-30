@@ -51,11 +51,11 @@ services:
     build:
       context: ./client
       dockerfile: ./Dockerfile
-    tty: true
-    stdin_open: true
+    # tty: true
+    # stdin_open: true
     volumes:
       - "./client:/app"
       # - ./src:app/src
-    restart: on-failure
+    restart: always
     ports:
       - "8008:8080"
