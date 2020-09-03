@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use JWTAuth;
+use JWTAuthException;
+use Hash;
 
 class AuthController extends Controller
 {
@@ -31,7 +33,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $credentials = $request->only('email', 'password');
         $token = null;
         try {
@@ -41,11 +44,14 @@ class AuthController extends Controller
         } catch (JWTAuthException $e) {
             return response()->json(['failed_to_create_token'], 500);
         }
+
         return response()->json(compact('token'));
     }
 
-    public function getUserInfo(Request $request) {
+    public function getUserInfo(Request $request)
+    {
         $user = JWTAuth::toUser($request->token);
+
         return response()->json(['result' => $user]);
     }
 }
