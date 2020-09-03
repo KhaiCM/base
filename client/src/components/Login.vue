@@ -13,17 +13,22 @@
         <input type="password" class="form-control form-control-lg" />
       </div>
 
-      <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+      <button type="submit" @click="authenticate" class="btn btn-dark btn-lg btn-block">Sign In</button>
 
-      <p class="forgot-password text-right mt-2 mb-4">
-        <router-link to="/forgot-password">Forgot password ?</router-link>
+      <p class="forgot-password mt-2 mb-4">
+        <span class="float-left">
+          <router-link to="/forgot-password">Sign Up ?</router-link>
+        </span>
+        <span class="text-right">
+          <router-link to="/forgot-password">Forgot password ?</router-link>
+        </span>
       </p>
 
       <div class="social-icons">
         <ul>
-          <li>
+          <li class="border-0">
             <a href="#">
-              <i class="fa fa-google"></i>
+              <i class="btn btn-block btn-outline-info fa fa-google"></i>
             </a>
           </li>
           <li>
@@ -45,7 +50,21 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      email: '',
+      password: '',
+      error: null,
+    };
+  },
+  methods: {
+    authenticate () {
+      this.$store.dispatch("LOGIN");
+
+      login ()
+      {
+
+    }
+    }
   },
 };
 </script>
