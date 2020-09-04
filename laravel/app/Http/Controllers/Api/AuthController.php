@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -16,7 +17,7 @@ class AuthController extends Controller
         $this->user = $user;
     }
 
-    public function register(Request $request)
+    public function signup(Request $request)
     {
         $user = $this->user->create([
             'name' => $request->get('name'),
@@ -31,11 +32,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login(Request $request) {
+    public function signin(Request $request)
+    {
         $credentials = $request->only('email', 'password');
         $token = null;
         try {
+
             if (!$token = JWTAuth::attempt($credentials)) {
+
                 return response()->json(['invalid_email_or_password'], 422);
             }
         } catch (JWTAuthException $e) {
@@ -44,8 +48,10 @@ class AuthController extends Controller
         return response()->json(compact('token'));
     }
 
-    public function getUserInfo(Request $request) {
+    public function getUserInfo(Request $request)
+    {
         $user = JWTAuth::toUser($request->token);
+
         return response()->json(['result' => $user]);
     }
 }

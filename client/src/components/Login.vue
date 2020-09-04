@@ -1,43 +1,53 @@
 <template>
   <div class="vue-tempalte">
-    <form>
+    <form name="form" @submit.prevent="login">
       <h3>Sign In</h3>
 
       <div class="form-group">
         <label>Email address</label>
-        <input type="email" class="form-control form-control-lg" />
+        <input
+          type="email"
+          v-model="user.email"
+          class="form-control form-control-lg"
+        />
+      </div>
+      <div
+        v-if="errors && errors.has('email')"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Email Is required
       </div>
 
       <div class="form-group">
         <label>Password</label>
-        <input type="password" class="form-control form-control-lg" />
+        <input
+          type="password"
+          v-model="user.password"
+          class="form-control form-control-lg"
+        />
+      </div>
+      <div
+        v-if="errors && errors.has('password')"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Password Is required
       </div>
 
-      <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-lg btn-block" :disabled="loading">
+          <span v-show="loading" class="spinner-border spinner-border-sm"></span>
+          <span>Login</span>
+        </button>
+      </div>
+      <div class="form-group">
+        <div v-if="message" class="alert alert-danger" role="alert">{{ message }}</div>
+      </div>
 
       <p class="forgot-password text-right mt-2 mb-4">
         <router-link to="/forgot-password">Forgot password ?</router-link>
       </p>
-
-      <div class="social-icons">
-        <ul>
-          <li>
-            <a href="#">
-              <i class="fa fa-google"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-facebook"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-twitter"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
     </form>
   </div>
 </template>
@@ -45,7 +55,40 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      user: {
+        email: '',
+        password: ''
+      },
+      message: '',
+      loading: false,
+      errors: null
+    };
   },
+    computed: {
+      loggedIn() {
+        return this.$store.state.auth.loggedIn;
+      }
+    },
+    created() {
+      if (this.loggedIn) {
+        this.$router.push('/user');
+      }
+    },
+    methods: {
+      login() {
+        this.loading = true;
+        if (this.user.email && this.user.password) {
+          this.$router.dispatch('auth/login', this.user)
+          .then(() => {
+              this.$router.push('/user');
+          }),
+          error => {
+            this.loading = false;
+            this.message = (error.response && error.response.data) || error.message || error.toString();
+          }
+        };
+      }
+    }
 };
 </script>

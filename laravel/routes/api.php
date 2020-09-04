@@ -17,10 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('auth/signup', 'AuthController@signup');
+Route::post('auth/signup', 'Api\AuthController@signup');
 
-Route::post('auth/signin', 'AuthController@signin');
+Route::post('auth/signin', 'Api\AuthController@signin');
 
 Route::group(['middleware' => 'jwt.auth'], function() {
-    Route::get('user-info', 'AuthController@getUserInfo');
+    Route::get('user-info', 'Api\AuthController@getUserInfo');
 });
