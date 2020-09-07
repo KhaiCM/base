@@ -62,9 +62,6 @@ export default {
     },
   },
   mounted() {
-    axios
-      .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-      .then((response) => (this.info = response));
   },
   created() {
     if (this.loggedIn) {
@@ -73,15 +70,8 @@ export default {
   },
   methods: {
     login() {
-      this.loading = true;
-      // console.log(02332323);
-      alert(123);
-      axios.get("http://localhost:8002/api/abc");
-      return;
       if (this.user.email && this.user.password) {
-        axios
-          .post("http://localhost:8002/api/auth/signin", this.user)
-          // this.$store.dispatch("auth/login" ``, this.user)
+          this.$store.dispatch("auth/login", this.user)
           .then(() => {
             this.$router.push("/user");
           }),
