@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">First</th>
+          <th scope="col">Email</th>
           <th scope="col">Last</th>
           <th scope="col">Handle</th>
         </tr>
@@ -12,7 +12,7 @@
       <tbody>
         <tr>
           <th scope="row">1</th>
-          <td>Mark</td>
+          <td>{{ user }}</td>
           <td>Otto</td>
           <td>@mdo</td>
         </tr>
@@ -34,9 +34,13 @@
 </template>
 
 <script>
+
+  import {mapState} from 'vuex';
 export default {
-  data() {
-    return {};
-  },
+  computed: {
+    ...mapState({
+        user: 'auth/user'
+    })
+  }
 };
 </script>

@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import axios from "axios";
 
+  import {mapState} from 'vuex';
 export default {
   data() {
     return {
@@ -57,31 +57,24 @@ export default {
     };
   },
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
-  },
-  mounted() {
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/user");
-    }
+    ...mapState({
+      errors: state => state.auth.errors
+    })
   },
   methods: {
     login() {
-      if (this.user.email && this.user.password) {
-          this.$store.dispatch("auth/login", this.user)
-          .then(() => {
-            this.$router.push("/user");
-          }),
-          (error) => {
-            this.loading = false;
-            this.message =
-              (error.response && error.response.data) ||
-              error.message ||
-              error.toString();
-          };
+      if (this.user.email !== '' && this.user.password !== '') {
+        this.$store.dispatch("auth/login", this.user)
+        .then(() => {
+          this.$router.push("/user");
+        }),
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        };
       }
     },
   },

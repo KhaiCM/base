@@ -19,10 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('auth/signup', 'Api\AuthController@signup');
 
-Route::get('abc', function() {
-    return response()->json(['aasdasdasd']);
-});
-
 Route::post('auth/signin', 'Api\AuthController@signin');
 
 Route::group(['middleware' => 'jwt.auth'], function() {

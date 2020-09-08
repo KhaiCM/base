@@ -7,6 +7,7 @@ const path = require('path')
 module.exports = {
   dev: {
 
+    proxy: 'http://localhost:8002',
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',

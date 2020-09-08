@@ -1,38 +1,49 @@
 import AuthService from '../services/auth.service';
 
-const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user
-  ? { status: { loggedIn: true }, user }
-  : { status: { loggedIn: false }, user: null };
+const userInStorage = JSON.parse(localStorage.getItem('user'));
 
-export const auth = {
+export default {
   namespaced: true,
-  state: initialState,
-  actions: {
-    login({
-      commit
-    }, user) {
-      return AuthService.login(user)
-        .then(
-          user => {
-            commit('loginSuccess', user);
-            return Promise.resolve(user);
-          },
-          error => {
-            commit('loginFailure');
-            return Promise.reject(error);
-          }
-        );
+  state: () => ({
+    token: '',
+    errors: null,
+  }),
+  mutations: {
+     updateToken(state, token) {
+      state.token = token;
+
     },
-    logout({
-      commit
-    }) {
+    loginFailure(state) {
+      state.loggedIn = false;
+      state.user = null;
+    },
+    logout(state) {
+      state.loggedIn = false;
+      state.user = null;
+    },
+    setLoggedIn(state, payload) {
+      state.loggedIn = payload;
+    },
+    setError(state, error) {
+      state.errors = error;
+    }
+  },
+  actions: {
+    login({commit}, user) {
+      return AuthService.login(user)
+      .then(user => {
+        commit('updateToken', user);
+        return Promise.resolve(user);
+      })
+      .catch(({ response }) => {
+        commit('setError', response)
+      })
+    },
+    logout({commit}) {
       AuthService.logout();
       commit('logout');
     },
-    register({
-      commit
-    }, user) {
+    register({commit}, user) {
       return AuthService.register(user).then(
         response => {
           commit('registerSuccess');
@@ -45,24 +56,5 @@ export const auth = {
       );
     }
   },
-  mutations: {
-    loginSuccess(state, user) {
-      state.status.loggedIn = true;
-      state.user = user;
-    },
-    loginFailure(state) {
-      state.status.loggedIn = false;
-      state.user = null;
-    },
-    logout(state) {
-      state.status.loggedIn = false;
-      state.user = null;
-    },
-    registerSuccess(state) {
-      state.status.loggedIn = false;
-    },
-    registerFailure(state) {
-      state.status.loggedIn = false;
-    }
-  }
+    getters: {},
 };
