@@ -42,8 +42,7 @@
 </template>
 
 <script>
-
-  import {mapState} from 'vuex';
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -58,23 +57,23 @@ export default {
   },
   computed: {
     ...mapState({
-      errors: state => state.auth.errors
-    })
+      errors: (state) => state.auth.errors,
+    }),
   },
   methods: {
     login() {
-      if (this.user.email !== '' && this.user.password !== '') {
-        this.$store.dispatch("auth/login", this.user)
-        .then(() => {
+      this.loading = true;
+      if (this.user.email !== "" && this.user.password !== "") {
+        this.$store.dispatch("auth/login", this.user).then(() => {
           this.$router.push("/user");
         }),
-        (error) => {
-          this.loading = false;
-          this.message =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        };
+          (error) => {
+            this.loading = false;
+            this.message =
+              (error.response && error.response.data) ||
+              error.message ||
+              error.toString();
+          };
       }
     },
   },
