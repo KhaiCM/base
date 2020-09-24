@@ -4,6 +4,7 @@ import Profile from '@/components/Profile';
 import Signin from '@/components/Signin';
 import Signup from '@/components/SignUp';
 import ForgotPassword from '@/components/ForgotPassword';
+import Test from '@/components/test';
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/forgotpassword',
       name: 'forgotpassword',
       component: ForgotPassword
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: Test
     },
   ]
 })

@@ -1,81 +1,95 @@
 <template>
   <div class="vue-tempalte">
-    {{ info }}
-    <form name="form" @submit.prevent="login">
-      <h3>Sign In</h3>
+    <ValidationObserver ref="form" v-slot="{ invalid }">
+            <form v-on:submit.prevent="signIn(user.email,user.password)">
 
-      <div class="form-group">
-        <label>Email address</label>
-        <input type="email" v-model="user.email" class="form-control form-control-lg" />
-      </div>
-      <div
-        v-if="errors && errors.has('email')"
-        class="alert alert-danger"
-        role="alert"
-      >Email Is required</div>
+                <b-form-group id="loginErrors" class="errorsBlock"
+                              v-show="loginErrors.length > 0">
+                    <ul v-for="error in loginErrors">
+                        <li>
+                            {{ error.message }}
+                        </li>
+                    </ul>
+                </b-form-group>
 
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" v-model="user.password" class="form-control form-control-lg" />
-      </div>
-      <div
-        v-if="errors && errors.has('password')"
-        class="alert alert-danger"
-        role="alert"
-      >Password Is required</div>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-lg btn-block" :disabled="loading">
-          <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-          <span>Login</span>
-        </button>
-      </div>
-      <div class="form-group">
-        <div v-if="message" class="alert alert-danger" role="alert">{{ message }}</div>
-      </div>
+                <div class="form-group">
+                    <label>Email address</label>
+                    <ValidationProvider placeholder="Login"
+                      name="Email"
+                      rules="required|email|min:3|max:254"
+                      v-slot="{ errors }">
+                        <input id="login" type="text" class="form-control form-control-lg" v-model="user.email"/>
+                        <div class="text-danger">
+                            <template v-show="errors.length > 0">
+                                <span class="help is-danger">
+                                    {{ errors[0] }}
+                                </span>
+                            </template>
+                        </div>
+                    </ValidationProvider>
+                </div>
 
-      <p class="forgot-password text-right mt-2 mb-4">
-        <router-link to="/forgot-password">Forgot password ?</router-link>
-      </p>
-    </form>
+                <div class="form-group">
+                    <label>Password</label>
+                    <ValidationProvider name="Password"
+                      rules="required|min:8|max:30"
+                      v-slot="{ errors }">
+                      <input id="password" type="password" class="form-control form-control-lg" v-model="user.password"/>
+                      <div class="text-danger">
+                          <template v-show="errors.length > 0">
+                              <span class="help is-danger">
+                                  {{ errors[0] }}
+                              </span>
+                          </template>
+                      </div>
+                    </ValidationProvider>
+                </div>
+
+                <div class="form-group">
+                    <button :disabled="invalid"
+                        class="btn btn-primary btn-lg btn-block"
+                        type="submit"
+                        variant="primary">
+                        <span>Login</span>
+                    </button>
+                </div>
+                <p class="forgot-password text-right mt-2 mb-4">
+                  <router-link to="/forgot-password">Forgot password ?</router-link>
+                </p>
+            </form>
+        </ValidationObserver>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import {mapGetters} from 'vuex';
+import {ValidationObserver, ValidationProvider} from "vee-validate";
 export default {
+  components: {
+      ValidationObserver,
+      ValidationProvider
+  },
   data() {
     return {
       user: {
         email: "",
         password: "",
       },
-      message: "",
-      loading: false,
-      info: null,
     };
   },
   computed: {
-    ...mapState({
-      errors: (state) => state.auth.errors,
-    }),
+    ...mapGetters("auth", {
+      loginErrors: "getLoginErrors"
+    })
   },
   methods: {
     login() {
-      this.loading = true;
-      if (this.user.email !== "" && this.user.password !== "") {
-        this.$store.dispatch("auth/login", this.user).then(() => {
-          this.$router.push("/user");
-        }),
-          (error) => {
-            this.loading = false;
-            this.message =
-              (error.response && error.response.data) ||
-              error.message ||
-              error.toString();
-          };
-      }
-    },
-  },
+        this.$store.dispatch("auth/login", this.user)
+        .then(() => {
+          this.$router.push({name: "profile"});
+        })
+    }
+  }
 };
 </script>
